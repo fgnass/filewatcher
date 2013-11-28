@@ -1,0 +1,27 @@
+{
+  "name": "filewatcher",
+  "version": "1.0.0",
+  "description": "Wrapper around fs.watch with fallback to fs.watchFile",
+  "author": "Felix Gnass",
+  "keywords": [
+    "fs",
+    "file",
+    "watch",
+    "watchFile"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/fgnass/filewatcher.git"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "~1.14.0",
+    "should": "~2.1.0",
+    "rimraf": "~2.2.2",
+    "posix": "~1.0.3"
+  }
+}
