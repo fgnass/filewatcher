@@ -1,5 +1,7 @@
 # filewatcher
 
+[![Build Status](https://travis-ci.org/fgnass/filewatcher.png?branch=master)](https://travis-ci.org/fgnass/filewatcher)
+
 Simple wrapper around `fs.watch` that falls back to `fs.watchFile` when it runs
 out of file handles.
 
