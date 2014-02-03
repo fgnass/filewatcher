@@ -59,6 +59,15 @@ function suite(opts) {
     del(f)
   })
 
+  it('should fire when files are added', function(done) {
+    w.once('change', function(file, mtime) {
+      file.should.equal(dir)
+      done()
+    })
+    w.add(dir)
+    var f = createFile()
+  })
+
   it('should not fire when removed', function(done) {
     this.timeout(4000)
     var f = createFile()

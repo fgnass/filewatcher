@@ -33,9 +33,10 @@ FileWatcher.prototype.add = function(file) {
   // callback for both fs.watch and fs.watchFile
   function check() {
     fs.stat(file, function(err, stat) {
-      var changed = err || stat.mtime > mtime
-      if (changed && self.watchers[file]) {
-        mtime = err ? -1 : stat.mtime
+      if (!self.watchers[file]) return
+      if (!stat) return self.emit('change', file, -1)
+      if (stat.isDirectory() || stat.mtime > mtime) {
+        mtime = stat.mtime
         self.emit('change', file, mtime)
       }
     })
