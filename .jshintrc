@@ -33,5 +33,5 @@
 
   /* Environments */
 
-  "browser"       : false,   // Allows the use of undefined globals exposed by modern browsers, i.e. window "node"          : true,   // Allows the use of globals for code running in nodejs, i.e. 'global'
+  "browser"       : false,  // Allows the use of undefined globals exposed by modern browsers, i.e. window "node"          : true    // Allows the use of globals for code running in nodejs, i.e. 'global'
 }
