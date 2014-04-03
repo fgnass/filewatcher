@@ -34,6 +34,14 @@ FileWatcher.prototype.add = function(file) {
   function check() {
     fs.stat(file, function(err, stat) {
       if (!self.watchers[file]) return
+
+      // close watcher and create a new one to work around fs.watch() bug
+      // see https://github.com/joyent/node/issues/3172
+      if (!self.polling) {
+        self.remove(file)
+        self.add(file)
+      }
+
       if (!stat) return self.emit('change', file, -1)
       if (stat.isDirectory() || stat.mtime > mtime) {
         mtime = stat.mtime
