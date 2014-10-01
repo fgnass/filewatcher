@@ -1,3 +1,5 @@
+/* global describe, it, before, after, afterEach */
+
 var filewatcher = require('..')
   , fs = require('fs')
   , rimraf = require('rimraf')
