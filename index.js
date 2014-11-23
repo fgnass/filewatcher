@@ -9,7 +9,7 @@ module.exports = function(opts) {
 
 function FileWatcher(opts) {
   if (!opts) opts = {}
-  if (opts.persistent == undefined) opts.persistent = true
+  if (opts.persistent === undefined) opts.persistent = true
   if (!opts.interval) opts.interval = 1000
   this.polling = 'polling' in opts ? opts.polling : process.platform == 'win32'
   this.opts = opts
