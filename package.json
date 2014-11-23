@@ -1,6 +1,6 @@
 {
   "name": "filewatcher",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "description": "Wrapper around fs.watch with fallback to fs.watchFile",
   "author": "Felix Gnass",
   "keywords": [
