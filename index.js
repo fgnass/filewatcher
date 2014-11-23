@@ -42,10 +42,10 @@ FileWatcher.prototype.add = function(file) {
         self.add(file)
       }
 
-      if (!stat) return self.emit('change', file, -1)
+      if (!stat) return self.emit('change', file, { deleted: true })
       if (stat.isDirectory() || stat.mtime > mtime) {
         mtime = stat.mtime
-        self.emit('change', file, mtime)
+        self.emit('change', file, stat)
       }
     })
   }

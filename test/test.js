@@ -27,9 +27,9 @@ function suite(opts) {
 
   it('should fire on write', function(done) {
     var f = createFile()
-    w.on('change', function(file, mtime) {
+    w.on('change', function(file, stat) {
       file.should.equal(f)
-      mtime.should.be.above(0)
+      stat.mtime.should.be.above(0)
       done()
     })
     w.on('error', done)
@@ -41,9 +41,9 @@ function suite(opts) {
 
   it('should fire on delete', function(done) {
     var f = createFile()
-    w.on('change', function(file, mtime) {
+    w.on('change', function(file, stat) {
       file.should.equal(f)
-       mtime.should.equal(-1)
+       stat.deleted.should.be.ok
        done()
     })
     w.add(f)
@@ -52,9 +52,9 @@ function suite(opts) {
 
   it('should fire more than once', function(done) {
     var f = createFile()
-    w.on('change', function(file, mtime) {
+    w.on('change', function(file, stat) {
       file.should.equal(f)
-      if (mtime == -1) return done()
+      if (stat.deleted) return done()
       touch(f)
     })
     w.add(f)
@@ -62,7 +62,7 @@ function suite(opts) {
   })
 
   it('should fire when files are added', function(done) {
-    w.once('change', function(file, mtime) {
+    w.once('change', function(file, stat) {
       file.should.equal(dir)
       done()
     })
@@ -73,9 +73,9 @@ function suite(opts) {
   it('should not fire when removed', function(done) {
     this.timeout(4000)
     var f = createFile()
-    w.on('change', function(file, mtime) {
+    w.on('change', function(file, stat) {
       file.should.equal(f)
-      if (mtime == -1) throw Error('must not be called')
+      if (stat.deleted) throw Error('must not be called')
       w.remove(file)
       del(f)
       setTimeout(done, 1000)
