@@ -24,9 +24,9 @@ var watcher = filewatcher(opts)
 // watch a file
 watcher.add(file)
 
-watcher.on('change', function(file, mtime) {
+watcher.on('change', function(file, stat) {
   console.log('File modified: %s', file)
-  if (mtime == -1) console.log('deleted')
+  if (!stat) console.log('deleted')
 })
 
 watcher.on('fallback', function(limit) {
@@ -60,4 +60,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
