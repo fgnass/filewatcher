@@ -23,5 +23,6 @@
     "should": "~2.1.0",
     "rimraf": "~2.2.2",
     "posix": "~1.0.3"
-  }
+  },
+  "dependencies": {}
 }

@@ -95,6 +95,7 @@ FileWatcher.prototype.remove = function(file) {
   if (!watcher) return
   delete this.watchers[file]
   watcher.close()
+  if (watcher.removeAllListeners) watcher.removeAllListeners()
 }
 
 /**
