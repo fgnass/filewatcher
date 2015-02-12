@@ -1,7 +1,8 @@
 var fs = require('fs')
-  , util = require('util')
-  , events = require('events')
-  , EventEmitter = events.EventEmitter
+var util = require('util')
+var events = require('events')
+var EventEmitter = events.EventEmitter
+
 
 module.exports = function(opts) {
   return new FileWatcher(opts)
@@ -33,6 +34,7 @@ FileWatcher.prototype.add = function(file) {
   // callback for both fs.watch and fs.watchFile
   function check() {
     fs.stat(file, function(err, stat) {
+
       if (!self.watchers[file]) return
 
       // close watcher and create a new one to work around fs.watch() bug
@@ -61,9 +63,15 @@ FileWatcher.prototype.add = function(file) {
     this.watchers[file] = fs.watch(file, this.opts, check)
   }
   catch (err) {
-    // emit fallback event if we ran out of file handles
-    if (err.code == 'EMFILE') this.emit('fallback', this.poll())
-    else this.emit('error', err)
+    if (err.code == 'EMFILE') {
+      if (this.opts.fallback !== false) {
+        // emit fallback event if we ran out of file handles
+        var count = this.poll()
+        this.emit('fallback', count)
+        return
+      }
+    }
+    this.emit('error', err)
   }
 }
 
