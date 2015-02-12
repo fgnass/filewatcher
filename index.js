@@ -3,6 +3,7 @@ var util = require('util')
 var events = require('events')
 var EventEmitter = events.EventEmitter
 
+var outOfFileHandles = false
 
 module.exports = function(opts) {
   return new FileWatcher(opts)
@@ -24,6 +25,9 @@ util.inherits(FileWatcher, EventEmitter)
  */
 FileWatcher.prototype.add = function(file) {
   var self = this
+
+  // don't add files after we ran out of file handles
+  if (outOfFileHandles && !this.polling) return
 
   // ignore files that don't exist or are already watched
   if (this.watchers[file] || !fs.existsSync(file)) return
@@ -70,6 +74,7 @@ FileWatcher.prototype.add = function(file) {
         this.emit('fallback', count)
         return
       }
+      outOfFileHandles = true
     }
     this.emit('error', err)
   }
