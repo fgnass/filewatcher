@@ -48,8 +48,10 @@ FileWatcher.prototype.add = function(file) {
         self.add(file)
       }
 
-      if (!stat) return self.emit('change', file, { deleted: true })
-      if (stat.isDirectory() || stat.mtime > mtime) {
+      if (!stat) {
+        self.emit('change', file, { deleted: true })
+      }
+      else if (stat.isDirectory() || stat.mtime > mtime) {
         mtime = stat.mtime
         self.emit('change', file, stat)
       }
