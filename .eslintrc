@@ -1,0 +1,18 @@
+{
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "new-cap": false,
+    "quotes": "avoid-escape",
+    "strict": "never",
+    "semi": "never",
+    "no-use-before-define": "nofunc",
+    "no-underscore-dangle": false,
+    "no-space-before-semi": false,
+    "no-path-concat": false,
+    "no-shadow": false,
+    "curly": false,
+    "eqeqeq": false
+  }
+}
