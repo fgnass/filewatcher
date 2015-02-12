@@ -110,7 +110,7 @@ function suite(polling) {
   })
 
   if (!polling) {
-    test('fallback', { timeout: 10000 }, function(t) {
+    test('fallback', function(t) {
       var ulimit = parseInt(process.env.ULIMIT)
       if (!ulimit) {
         console.log('Set the ULIMIT env var to `ulimit -n` to test the fallback')
