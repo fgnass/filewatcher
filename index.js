@@ -73,6 +73,7 @@ FileWatcher.prototype.add = function(file) {
       if (this.opts.fallback !== false) {
         // emit fallback event if we ran out of file handles
         var count = this.poll()
+        this.add(file)
         this.emit('fallback', count)
         return
       }
