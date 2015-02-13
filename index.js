@@ -1,5 +1,6 @@
 var fs = require('fs')
 var util = require('util')
+var debounce = require('debounce')
 var events = require('events')
 var EventEmitter = events.EventEmitter
 
@@ -11,6 +12,7 @@ module.exports = function(opts) {
 
 function FileWatcher(opts) {
   if (!opts) opts = {}
+  if (opts.debounce === undefined) opts.debounce = 10
   if (opts.persistent === undefined) opts.persistent = true
   if (!opts.interval) opts.interval = 1000
   this.polling = 'polling' in opts ? opts.polling : process.platform == 'win32'
@@ -66,7 +68,9 @@ FileWatcher.prototype.add = function(file) {
 
   try {
     // try using fs.watch ...
-    this.watchers[file] = fs.watch(file, this.opts, check)
+    this.watchers[file] = fs.watch(file, this.opts,
+      debounce(check, this.opts.debounce)
+    )
   }
   catch (err) {
     if (err.code == 'EMFILE') {

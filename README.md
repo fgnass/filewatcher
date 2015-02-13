@@ -15,6 +15,7 @@ var filewatcher = require('filewatcher')
 
 // the default options
 var opts = {
+  debounce: 10,    // debounce events in non-polling mode by 10ms
   interval: 1000,  // if we need to poll, do it every 1000ms
   persistent: true // don't end the process while files are watched
 }
