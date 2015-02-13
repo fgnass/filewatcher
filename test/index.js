@@ -109,7 +109,7 @@ function suite(polling) {
     touch(f)
   })
 
-  if (!polling) {
+  if (!polling && process.platform != 'linux') {
     test('fallback', function(t) {
       var ulimit = parseInt(process.env.ULIMIT)
       if (!ulimit) {
