@@ -15,7 +15,7 @@ function FileWatcher(opts) {
   if (opts.debounce === undefined) opts.debounce = 10
   if (opts.persistent === undefined) opts.persistent = true
   if (!opts.interval) opts.interval = 1000
-  this.polling = 'polling' in opts ? opts.polling : process.platform == 'win32'
+  this.polling = opts.forcePolling
   this.opts = opts
   this.watchers = {}
 }

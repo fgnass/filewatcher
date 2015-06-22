@@ -34,7 +34,7 @@ function suite(polling) {
   var w // the watcher
 
   function test(name, conf, cb) {
-    w = filewatcher({ polling: polling })
+    w = filewatcher({ forcePolling: polling })
     name += polling ? ' (fs.watchFile)' : ' (fs.watch)'
     return tap
       .test(name, conf, cb)
