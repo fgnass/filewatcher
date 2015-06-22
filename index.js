@@ -92,7 +92,7 @@ FileWatcher.prototype.add = function(file) {
  * runs out of file handles.
  */
 FileWatcher.prototype.poll = function() {
-  if (this.polling) return
+  if (this.polling) return 0
   this.polling = true
   var watched = Object.keys(this.watchers)
   this.removeAll()
