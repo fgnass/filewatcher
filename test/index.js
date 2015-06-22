@@ -1,23 +1,24 @@
 var fs = require('fs')
+var path = require('path')
 
 var filewatcher = require('..')
 var rimraf = require('rimraf')
 var tap = require('tap')
 
-var dir = __dirname + '/tmp'
+var dir = path.join(__dirname, 'tmp')
 
 function suite(polling) {
 
   var i = 0
   function createFile() {
-    var n = dir + '/tmp00' + (i++)
+    var n = path.join(dir, 'tmp00' + (i++))
     fs.writeFileSync(n, Date.now())
     return n
   }
 
   function createDir() {
-    var d = dir + '/dir00' + (i++)
-    var f = d + '/file'
+    var d = path.join(dir, 'dir00' + (i++))
+    var f = path.join(d, 'file')
     fs.mkdirSync(d)
     fs.writeFileSync(f, Date.now())
     return f
@@ -52,12 +53,13 @@ function suite(polling) {
 
   test('change', function(t) {
     t.plan(3)
-    var f = createFile()
     w.on('change', function(file, stat) {
       t.equal(file, f)
       t.ok(stat.mtime > 0, 'mtime > 0')
     })
     w.on('error', function(err) { t.fail(err) })
+
+    var f = createFile()
     w.add(f)
 
     t.equivalent(w.list(), [f])
