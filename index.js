@@ -39,7 +39,7 @@ FileWatcher.prototype.add = function(file) {
 
   // callback for both fs.watch and fs.watchFile
   function check() {
-    fs.stat(file, function(err, stat) {
+    fs.stat(file, function(e, stat) {
 
       if (!self.watchers[file]) return
 
