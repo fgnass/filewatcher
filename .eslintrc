@@ -3,16 +3,15 @@
     "node": true
   },
   "rules": {
-    "new-cap": false,
-    "quotes": "avoid-escape",
-    "strict": "never",
-    "semi": "never",
-    "no-use-before-define": "nofunc",
-    "no-underscore-dangle": false,
-    "no-space-before-semi": false,
-    "no-path-concat": false,
-    "no-shadow": false,
-    "curly": false,
-    "eqeqeq": false
+    "curly": [2, "multi-line"],
+    "consistent-return": 0,
+    "eqeqeq": 0,
+    "new-cap": 0,
+    "no-path-concat": 0,
+    "no-underscore-dangle": 0,
+    "no-use-before-define": [2, "nofunc"],
+    "quotes": [2, "single", "avoid-escape"],
+    "semi": [2, "never"],
+    "strict": [2, "never"]
   }
 }
