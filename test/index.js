@@ -52,7 +52,7 @@ function suite(polling) {
   })
 
   test('change', function(t) {
-    t.plan(3)
+    t.plan(2)
     w.on('change', function(file, stat) {
       t.equal(file, f)
       t.ok(stat.mtime > 0, 'mtime > 0')
@@ -62,7 +62,6 @@ function suite(polling) {
     var f = createFile()
     w.add(f)
 
-    t.equivalent(w.list(), [f])
     touch(f)
   })
 
@@ -78,19 +77,20 @@ function suite(polling) {
   })
 
   test('add to dir', function(t) {
-    t.plan(2)
-    w.once('change', function(file, stat) {
+    t.plan(1)
+    w.on('change', function(file, stat) {
       t.equal(file, dir)
     })
     w.add(dir)
-    t.equivalent(w.list(), [dir])
     setTimeout(createFile, 1000)
   })
 
   test('fire more than once', function(t) {
     t.plan(2)
     var f = createFile()
+    console.log('F', f)
     w.on('change', function(file, stat) {
+      console.log('CHANGE', file, stat)
       t.equal(file, f)
       if (!stat.deleted) del(f)
     })
@@ -132,13 +132,12 @@ function suite(polling) {
       })
       w.on('change', function(file) {
         t.equal(file, last)
-        t.equivalent(w.list(), files)
       })
       w.on('error', function(err) {
         t.fail(err)
       })
 
-      t.plan(3)
+      t.plan(2)
       files.forEach(w.add, w)
     })
   }
