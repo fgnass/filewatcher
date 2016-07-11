@@ -88,9 +88,7 @@ function suite(polling) {
   test('fire more than once', function(t) {
     t.plan(2)
     var f = createFile()
-    console.log('F', f)
     w.on('change', function(file, stat) {
-      console.log('CHANGE', file, stat)
       t.equal(file, f)
       if (!stat.deleted) del(f)
     })
