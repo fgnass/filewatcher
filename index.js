@@ -49,7 +49,7 @@ FileWatcher.prototype.add = function(file) {
         // see https://github.com/joyent/node/issues/3172
         if (!self.polling) {
           self.remove(file)
-          self.add(file)
+          add(true)
         }
 
         if (!stat) {
@@ -62,31 +62,35 @@ FileWatcher.prototype.add = function(file) {
       })
     }
 
-    if (self.polling) {
-      self.watchers[file] = { close: function() { fs.unwatchFile(file) }}
-      fs.watchFile(file, self.opts, check)
-      return
+    function add(silent) {
+      if (self.polling) {
+        self.watchers[file] = { close: function() { fs.unwatchFile(file) }}
+        fs.watchFile(file, self.opts, check)
+        return
+      }
+
+      try {
+        // try using fs.watch ...
+        self.watchers[file] = fs.watch(file, self.opts,
+          debounce(check, self.opts.debounce)
+        )
+      }
+      catch (err) {
+        if (err.code == 'EMFILE') {
+          if (self.opts.fallback !== false) {
+            // emit fallback event if we ran out of file handles
+            var count = self.poll()
+            add()
+            self.emit('fallback', count)
+            return
+          }
+          outOfFileHandles = true
+        }
+        if (!silent) self.emit('error', err)
+      }
     }
 
-    try {
-      // try using fs.watch ...
-      self.watchers[file] = fs.watch(file, self.opts,
-        debounce(check, self.opts.debounce)
-      )
-    }
-    catch (err) {
-      if (err.code == 'EMFILE') {
-        if (self.opts.fallback !== false) {
-          // emit fallback event if we ran out of file handles
-          var count = self.poll()
-          self.add(file)
-          self.emit('fallback', count)
-          return
-        }
-        outOfFileHandles = true
-      }
-      self.emit('error', err)
-    }
+    add()
   })
 }
 
