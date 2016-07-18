@@ -32,59 +32,66 @@ FileWatcher.prototype.add = function(file) {
   if (outOfFileHandles && !this.polling) return
 
   // ignore files that don't exist or are already watched
-  if (this.watchers[file] || !fs.existsSync(file)) return
+  if (this.watchers[file]) return
+  fs.stat(file, function (e, stat) {
+    if (e) return
 
-  // remember the current mtime
-  var mtime = fs.statSync(file).mtime
+    // remember the current mtime
+    var mtime = stat.mtime
 
-  // callback for both fs.watch and fs.watchFile
-  function check() {
-    fs.stat(file, function(e, stat) {
+    // callback for both fs.watch and fs.watchFile
+    function check() {
+      fs.stat(file, function(e, stat) {
 
-      if (!self.watchers[file]) return
+        if (!self.watchers[file]) return
 
-      // close watcher and create a new one to work around fs.watch() bug
-      // see https://github.com/joyent/node/issues/3172
-      if (!self.polling) {
-        self.remove(file)
-        self.add(file)
-      }
+        // close watcher and create a new one to work around fs.watch() bug
+        // see https://github.com/joyent/node/issues/3172
+        if (!self.polling) {
+          self.remove(file)
+          add(true)
+        }
 
-      if (!stat) {
-        self.emit('change', file, { deleted: true })
-      }
-      else if (stat.isDirectory() || stat.mtime > mtime) {
-        mtime = stat.mtime
-        self.emit('change', file, stat)
-      }
-    })
-  }
+        if (!stat) {
+          self.emit('change', file, { deleted: true })
+        }
+        else if (stat.isDirectory() || stat.mtime > mtime) {
+          mtime = stat.mtime
+          self.emit('change', file, stat)
+        }
+      })
+    }
 
-  if (this.polling) {
-    fs.watchFile(file, this.opts, check)
-    this.watchers[file] = { close: function() { fs.unwatchFile(file) }}
-    return
-  }
-
-  try {
-    // try using fs.watch ...
-    this.watchers[file] = fs.watch(file, this.opts,
-      debounce(check, this.opts.debounce)
-    )
-  }
-  catch (err) {
-    if (err.code == 'EMFILE') {
-      if (this.opts.fallback !== false) {
-        // emit fallback event if we ran out of file handles
-        var count = this.poll()
-        this.add(file)
-        this.emit('fallback', count)
+    function add(silent) {
+      if (self.polling) {
+        self.watchers[file] = { close: function() { fs.unwatchFile(file) }}
+        fs.watchFile(file, self.opts, check)
         return
       }
-      outOfFileHandles = true
+
+      try {
+        // try using fs.watch ...
+        self.watchers[file] = fs.watch(file, self.opts,
+          debounce(check, self.opts.debounce)
+        )
+      }
+      catch (err) {
+        if (err.code == 'EMFILE') {
+          if (self.opts.fallback !== false) {
+            // emit fallback event if we ran out of file handles
+            var count = self.poll()
+            add()
+            self.emit('fallback', count)
+            return
+          }
+          outOfFileHandles = true
+        }
+        if (!silent) self.emit('error', err)
+      }
     }
-    this.emit('error', err)
-  }
+
+    add()
+  })
 }
 
 /**
