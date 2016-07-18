@@ -11,6 +11,7 @@ More precisely filewatcher …
 * doesn't fire twice when files are saved
 * falls back to `fs.watchFile` when running out of file handles
 * has no native dependencies
+* uses Node's async APIs under the hood
 
 This module is used by [node-dev](https://npmjs.org/package/node-dev)
 and [instant](https://npmjs.org/package/instant).
@@ -70,7 +71,7 @@ var watcher = filewatcher(opts)
 
 ### The MIT License (MIT)
 
-Copyright (c) 2013-2015 Felix Gnass
+Copyright (c) 2013-2016 Felix Gnass
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
